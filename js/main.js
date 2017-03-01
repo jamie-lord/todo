@@ -27,6 +27,7 @@ $(document).ready(function() {
         } else {
             $('button').prop('disabled', true);
         }
+        $('#export-button').prop('disabled', false);
     });
 
     // bind input enter with button submit
@@ -79,7 +80,7 @@ $(document).ready(function() {
         $('li').remove();
         if (items.length > 0) {
             for (var i = 0; i < items.length; i++) {
-                $('ul').append('<li class= "list-group-item" data-toggle="modal" data-target="#editModal">' + items[i] + '<span class="glyphicon glyphicon-remove"></span></li>');
+                $('ul').append('<li class="list-group-item" data-toggle="modal" data-target="#editModal"><h5 class="task">' + items[i] + ' <small>2017-03-01</small><span class="glyphicon glyphicon-remove pull-right"></span></h5></li>');
             }
         }
     };
