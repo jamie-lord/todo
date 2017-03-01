@@ -18,7 +18,7 @@ $(document).ready(function() {
     $('button').prop('disabled', true);
     $('#export-button').prop('disabled', false);
     $('input').keyup(function() {
-        if ($(this).val().length > 0) {
+        if ($(this).val().length !== 0) {
             $('button').prop('disabled', false);
         } else {
             $('button').prop('disabled', true);
