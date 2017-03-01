@@ -5,17 +5,6 @@ class Task {
         this.completed = false;
         this.priority = priority;
     }
-
-    toString() {
-        var output = '';
-        if (this.priority) {
-            output.concat('(' + this.priority + ') ');
-        }
-        if (this.completed) {
-            output.concat(this.completed + ' ');
-        }
-        return output.concat(this.title);
-    }
 }
 
 $(document).ready(function() {
@@ -24,15 +13,18 @@ $(document).ready(function() {
     var items = getFromLocal(STORAGE_KEY);
     var index;
     loadList(items);
+
     // if input is empty disable button
-    $('#main-button').prop('disabled', true);
+    $('button').prop('disabled', true);
+    $('#export-button').prop('disabled', false);
     $('input').keyup(function() {
-        if ($(this).val().length !== 0) {
-            $('#main-button').prop('disabled', false);
+        if ($(this).val().length > 0) {
+            $('button').prop('disabled', false);
         } else {
-            $('#main-button').prop('disabled', true);
+            $('button').prop('disabled', true);
         }
     });
+
     // bind input enter with button submit
     $('#main-input').keypress(function(e) {
         if (e.which === 13) {
@@ -40,13 +32,10 @@ $(document).ready(function() {
                 $('#main-button').click();
         }
     });
+
     $('#main-button').click(function() {
         var value = $('#main-input').val();
-        var task = new Task('A', value);
-
-        items.push(task.toString());
-
-
+        items.push(value);
         //console.log(items[0]);
         $('#main-input').val('');
         loadList(items);
@@ -54,6 +43,7 @@ $(document).ready(function() {
         // set button to
         $('button').prop('disabled', true);
     });
+
     // delete one item
     $('ul').delegate("span", "click", function(event) {
         event.stopPropagation();
@@ -61,11 +51,6 @@ $(document).ready(function() {
         $('li').eq(index).remove();
         items.splice(index, 1);
         storeToLocal(STORAGE_KEY, items);
-
-    });
-    // save entire list
-    $('#save-button').click(function() {
-        saveToFile(items);
     });
 
     // edit panel
@@ -103,11 +88,15 @@ $(document).ready(function() {
             return [];
     }
 
+    // save entire list
+    $('#export-button').click(function() {
+        saveToFile(items);
+    });
+
     function saveToFile(items) {
         var file = new File(items, "test.txt", {
             type: "text/plain;charset=utf-8"
         });
         saveAs(file);
     }
-
 });
