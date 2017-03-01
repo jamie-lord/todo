@@ -1,3 +1,23 @@
+class Task {
+    constructor(priority, title) {
+        this.created = moment().format('YYYY-MM-DD');
+        this.title = title;
+        this.completed = false;
+        this.priority = priority;
+    }
+
+    toString() {
+        var output = '';
+        if (this.priority) {
+            output.concat('(' + this.priority + ') ');
+        }
+        if (this.completed) {
+            output.concat(this.completed + ' ');
+        }
+        return output.concat(this.title);
+    }
+}
+
 $(document).ready(function() {
 
     const STORAGE_KEY = 'tasks';
@@ -5,12 +25,12 @@ $(document).ready(function() {
     var index;
     loadList(items);
     // if input is empty disable button
-    $('button').prop('disabled', true);
-    $('input').keyup(function() {
+    $('#main-button').prop('disabled', true);
+    $('#main-button').keyup(function() {
         if ($(this).val().length !== 0) {
-            $('button').prop('disabled', false);
+            $('#main-button').prop('disabled', false);
         } else {
-            $('button').prop('disabled', true);
+            $('#main-button').prop('disabled', true);
         }
     });
     // bind input enter with button submit
@@ -22,7 +42,11 @@ $(document).ready(function() {
     });
     $('#main-button').click(function() {
         var value = $('#main-input').val();
-        items.push(value);
+        var task = new Task('A', value);
+
+        items.push(task.toString());
+
+
         //console.log(items[0]);
         $('#main-input').val('');
         loadList(items);
@@ -38,6 +62,10 @@ $(document).ready(function() {
         items.splice(index, 1);
         storeToLocal(STORAGE_KEY, items);
 
+    });
+    // save entire list
+    $('#save-button').click(function() {
+        saveToFile(items);
     });
 
     // edit panel
@@ -73,6 +101,13 @@ $(document).ready(function() {
             return JSON.parse(localStorage[key]);
         else
             return [];
+    }
+
+    function saveToFile(items) {
+        var file = new File(items, "test.txt", {
+            type: "text/plain;charset=utf-8"
+        });
+        saveAs(file);
     }
 
 });
