@@ -13,10 +13,14 @@ $(document).ready(function() {
     var items = getFromLocal(STORAGE_KEY);
     var index;
     loadList(items);
+    disableEditButtons();
+
+    function disableEditButtons() {
+        $('button').prop('disabled', true);
+        $('#export-button').prop('disabled', false);
+    }
 
     // if input is empty disable button
-    $('button').prop('disabled', true);
-    $('#export-button').prop('disabled', false);
     $('input').keyup(function() {
         if ($(this).val().length !== 0) {
             $('button').prop('disabled', false);
@@ -36,12 +40,10 @@ $(document).ready(function() {
     $('#main-button').click(function() {
         var value = $('#main-input').val();
         items.push(value);
-        //console.log(items[0]);
         $('#main-input').val('');
         loadList(items);
         storeToLocal(STORAGE_KEY, items);
-        // set button to
-        $('button').prop('disabled', true);
+        disableEditButtons();
     });
 
     // delete one item
@@ -65,6 +67,11 @@ $(document).ready(function() {
         items[index] = $('#edit-input').val();
         loadList(items);
         storeToLocal(STORAGE_KEY, items);
+    });
+
+    // when edit modal is closed keyup main input
+    $('#editModal').on('hidden.bs.modal', function() {
+        $('#main-input').keyup();
     });
 
     // loadList
