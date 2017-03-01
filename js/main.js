@@ -26,7 +26,7 @@ $(document).ready(function() {
     loadList(items);
     // if input is empty disable button
     $('#main-button').prop('disabled', true);
-    $('#main-button').keyup(function() {
+    $('input').keyup(function() {
         if ($(this).val().length !== 0) {
             $('#main-button').prop('disabled', false);
         } else {
