@@ -22,7 +22,7 @@ $(document).ready(function() {
     }
 
     // if input is empty disable button
-    $('input').keyup(function() {
+    $('#main-input, #edit-input').keyup(function() {
         if ($(this).val().length !== 0) {
             $('button').prop('disabled', false);
         } else {
@@ -62,7 +62,6 @@ $(document).ready(function() {
     $('ul').delegate('li', 'click', function() {
         index = $('li').index(this);
         var content = items[index].title;
-        console.log(content);
         $('#edit-input').val(content);
     });
 
