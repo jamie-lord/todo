@@ -83,7 +83,16 @@ $(document).ready(function() {
         $('li').remove();
         if (items.length > 0) {
             for (var i = 0; i < items.length; i++) {
-                $('ul').append('<li class="list-group-item" data-toggle="modal" data-target="#editModal"><h5 class="task">' + items[i].title + ' <small>2017-03-01</small><span class="glyphicon glyphicon-remove pull-right"></span></h5></li>');
+                var item = items[i];
+                var taskRow = '<li class="list-group-item" data-toggle="modal" data-target="#editModal"><h5 class="task">' + item.title;
+                if (item.created !== null) {
+                    taskRow += ' <small>' + item.created + '</small>';
+                }
+                if (item.lastUpdated !== null && item.lastUpdated !== item.created) {
+                    taskRow += ' <small>Updated ' + item.lastUpdated + '</small>'
+                }
+                taskRow += '<span class="glyphicon glyphicon-remove pull-right"></span></h5></li>';
+                $('ul').append(taskRow);
             }
         }
     };
