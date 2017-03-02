@@ -3,6 +3,7 @@ class Task {
         this.created = moment().format('YYYY-MM-DD');
         this.title = title;
         this.completed = false;
+        this.lastUpdated = null;
         this.priority = priority;
     }
 }
@@ -38,9 +39,10 @@ $(document).ready(function() {
         }
     });
 
+    // Create a new task
     $('#main-button').click(function() {
-        var value = $('#main-input').val();
-        items.push(value);
+        var taskTitle = $('#main-input').val();
+        items.push(new Task('A', taskTitle));
         $('#main-input').val('');
         loadList(items);
         storeToLocal(STORAGE_KEY, items);
@@ -59,13 +61,14 @@ $(document).ready(function() {
     // edit panel
     $('ul').delegate('li', 'click', function() {
         index = $('li').index(this);
-        var content = items[index];
+        var content = items[index].title;
         console.log(content);
         $('#edit-input').val(content);
     });
 
     $('#edit-button').click(function() {
-        items[index] = $('#edit-input').val();
+        items[index].title = $('#edit-input').val();
+        items[index].lastUpdated = moment().format('YYYY-MM-DD');
         loadList(items);
         storeToLocal(STORAGE_KEY, items);
     });
@@ -80,7 +83,7 @@ $(document).ready(function() {
         $('li').remove();
         if (items.length > 0) {
             for (var i = 0; i < items.length; i++) {
-                $('ul').append('<li class="list-group-item" data-toggle="modal" data-target="#editModal"><h5 class="task">' + items[i] + ' <small>2017-03-01</small><span class="glyphicon glyphicon-remove pull-right"></span></h5></li>');
+                $('ul').append('<li class="list-group-item" data-toggle="modal" data-target="#editModal"><h5 class="task">' + items[i].title + ' <small>2017-03-01</small><span class="glyphicon glyphicon-remove pull-right"></span></h5></li>');
             }
         }
     };
