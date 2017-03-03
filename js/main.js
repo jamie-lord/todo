@@ -109,13 +109,18 @@ $(document).ready(function() {
 
     // save entire list
     $('#export-button').click(function() {
-        saveToFile(items);
-    });
-
-    function saveToFile(items) {
-        var file = new File(items, "test.txt", {
+        var output = [];
+        items.forEach(function(item) {
+            var task = '';
+            if (item.completed) {
+                task += 'x ';
+            }
+            task += '(' + item.priority + ') ' + item.created + ' ' + item.title + '\r\n';
+            output.push(task);
+        }, this);
+        var file = new File(output, "todo.txt", {
             type: "text/plain;charset=utf-8"
         });
         saveAs(file);
-    }
+    });
 });
