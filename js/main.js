@@ -1,13 +1,3 @@
-class Task {
-    constructor(priority, title) {
-        this.created = moment().format('YYYY-MM-DD');
-        this.title = title;
-        this.completed = false;
-        this.lastUpdated = null;
-        this.priority = priority;
-    }
-}
-
 $(document).ready(function() {
 
     const STORAGE_KEY = 'tasks';
@@ -41,8 +31,9 @@ $(document).ready(function() {
 
     // Create a new task
     $('#main-button').click(function() {
-        var taskTitle = $('#main-input').val();
-        items.push(new Task('A', taskTitle));
+        var newTask = new TodoTxtItem($('#main-input').val());
+        newTask.date = new Date();
+        items.push(newTask);
         $('#main-input').val('');
         loadList(items);
         storeToLocal(STORAGE_KEY, items);
@@ -61,13 +52,12 @@ $(document).ready(function() {
     // edit panel
     $('ul').delegate('li', 'click', function() {
         index = $('li').index(this);
-        var content = items[index].title;
+        var content = items[index].text;
         $('#edit-input').val(content);
     });
 
     $('#edit-button').click(function() {
-        items[index].title = $('#edit-input').val();
-        items[index].lastUpdated = moment().format('YYYY-MM-DD');
+        items[index].text = $('#edit-input').val();
         loadList(items);
         storeToLocal(STORAGE_KEY, items);
     });
@@ -83,12 +73,9 @@ $(document).ready(function() {
         if (items.length > 0) {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
-                var taskRow = '<li class="list-group-item" data-toggle="modal" data-target="#editModal"><h5 class="task">' + item.title;
-                if (item.created !== null) {
-                    taskRow += ' <small>' + item.created + '</small>';
-                }
-                if (item.lastUpdated !== null && item.lastUpdated !== item.created) {
-                    taskRow += ' <small>Updated ' + item.lastUpdated + '</small>'
+                var taskRow = '<li class="list-group-item" data-toggle="modal" data-target="#editModal"><h5 class="task">' + item.text;
+                if (item.date !== null) {
+                    taskRow += ' <small>' + item.date.toString() + '</small>';
                 }
                 taskRow += '<span class="glyphicon glyphicon-remove pull-right"></span></h5></li>';
                 $('ul').append(taskRow);
@@ -111,12 +98,7 @@ $(document).ready(function() {
     $('#export-button').click(function() {
         var output = [];
         items.forEach(function(item) {
-            var task = '';
-            if (item.completed) {
-                task += 'x ';
-            }
-            task += '(' + item.priority + ') ' + item.created + ' ' + item.title + '\r\n';
-            output.push(task);
+            output.push(item.toString());
         }, this);
         var file = new File(output, "todo.txt", {
             type: "text/plain;charset=utf-8"
