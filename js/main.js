@@ -52,12 +52,14 @@ $(document).ready(function() {
     // edit panel
     $('ul').delegate('li', 'click', function() {
         index = $('li').index(this);
-        var content = items[index].text;
+        var content = items[index].toString();
         $('#edit-input').val(content);
     });
 
     $('#edit-button').click(function() {
-        items[index].text = $('#edit-input').val();
+        var item = new TodoTxtItem();
+        item.parse($('#edit-input').val());
+        items[index] = item;
         loadList(items);
         storeToLocal(STORAGE_KEY, items);
     });
@@ -75,22 +77,35 @@ $(document).ready(function() {
                 var item = items[i];
                 var taskRow = '<li class="list-group-item" data-toggle="modal" data-target="#editModal"><h5 class="task">' + item.text;
                 if (item.date !== null) {
-                    taskRow += ' <small>' + item.date.toString() + '</small>';
+                    taskRow += ' <small>' + item.dateString() + '</small>';
                 }
                 taskRow += '<span class="glyphicon glyphicon-remove pull-right"></span></h5></li>';
                 $('ul').append(taskRow);
             }
         }
-    };
+    }
 
     function storeToLocal(key, items) {
         localStorage[key] = JSON.stringify(items);
     }
 
     function getFromLocal(key) {
-        if (localStorage[key])
-            return JSON.parse(localStorage[key]);
-        else
+        if (localStorage[key]) {
+            var objects = JSON.parse(localStorage[key]);
+            var taskItems = [];
+            for (var index = 0; index < objects.length; index++) {
+                var item = objects[index];
+                var task = new TodoTxtItem();
+                task.text = item.text;
+                task.priority = item.priority;
+                task.complete = item.complete;
+                task.date = new Date(item.date);
+                task.contexts = item.contexts;
+                task.projects = item.projects;
+                taskItems.push(task);
+            }
+            return taskItems;
+        } else
             return [];
     }
 
@@ -98,7 +113,7 @@ $(document).ready(function() {
     $('#export-button').click(function() {
         var output = [];
         items.forEach(function(item) {
-            output.push(item.text + '\t\n');
+            output.push(item.toString() + '\t\n');
         }, this);
         var file = new File(output, "todo.txt", {
             type: "text/plain;charset=utf-8"
