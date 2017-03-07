@@ -4,12 +4,12 @@ $(document).ready(function() {
     var items = getFromLocal(STORAGE_KEY);
     var index;
     loadList(items);
-    disableEditButtons();
+    disableEditButtons(true);
     updatePageTitle();
 
-    function disableEditButtons() {
-        $('button').prop('disabled', true);
-        $('#export-button').prop('disabled', false);
+    function disableEditButtons(val) {
+        $('#main-button').prop('disabled', val);
+        $('#edit-button').prop('disabled', val);
     }
 
     function updatePageTitle() {
@@ -19,11 +19,10 @@ $(document).ready(function() {
     // if input is empty disable button
     $('#main-input, #edit-input').keyup(function() {
         if ($(this).val().length !== 0) {
-            $('button').prop('disabled', false);
+            disableEditButtons(false);
         } else {
-            $('button').prop('disabled', true);
+            disableEditButtons(true);
         }
-        $('#export-button').prop('disabled', false);
     });
 
     // bind input enter with button submit
@@ -76,7 +75,7 @@ $(document).ready(function() {
 
     // loadList
     function loadList(items) {
-        $('li').remove();
+        $('#task-list li').remove();
         if (items.length > 0) {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
@@ -85,7 +84,7 @@ $(document).ready(function() {
                     taskRow += ' <small>' + item.dateString() + '</small>';
                 }
                 taskRow += '<span class="glyphicon glyphicon-remove pull-right"></span></h5></li>';
-                $('ul').append(taskRow);
+                $('#task-list').append(taskRow);
             }
         }
     }
