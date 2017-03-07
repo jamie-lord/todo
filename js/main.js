@@ -5,10 +5,15 @@ $(document).ready(function() {
     var index;
     loadList(items);
     disableEditButtons();
+    updatePageTitle();
 
     function disableEditButtons() {
         $('button').prop('disabled', true);
         $('#export-button').prop('disabled', false);
+    }
+
+    function updatePageTitle() {
+        document.title = items.length + ' Todo';
     }
 
     // if input is empty disable button
@@ -87,6 +92,7 @@ $(document).ready(function() {
 
     function storeToLocal(key, items) {
         localStorage[key] = JSON.stringify(items);
+        updatePageTitle();
     }
 
     function getFromLocal(key) {
