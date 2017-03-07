@@ -119,7 +119,7 @@ $(document).ready(function() {
     $('#export-button').click(function() {
         var output = [];
         items.forEach(function(item) {
-            output.push(item.toString() + '\t\n');
+            output.push(item.toString() + '\n');
         }, this);
         var file = new File(output, "todo.txt", {
             type: "text/plain;charset=utf-8"
