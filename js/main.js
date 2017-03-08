@@ -48,14 +48,14 @@ $(document).ready(function() {
     $('ul').delegate('button.delete-button', 'click', function(event) {
         event.stopPropagation();
         index = $('button.delete-button').index(this);
-        $('li').eq(index).remove();
+        $('li.task-item').eq(index).remove();
         items.splice(index, 1);
         storeToLocal(STORAGE_KEY, items);
     });
 
     // edit panel
     $('ul').delegate('li', 'click', function() {
-        index = $('li').index(this);
+        index = $('li.task-item').index(this);
         var content = items[index].toString();
         $('#edit-input').val(content);
     });
@@ -79,7 +79,7 @@ $(document).ready(function() {
         if (items.length > 0) {
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
-                var taskRow = '<li class="list-group-item" data-toggle="modal" data-target="#editModal"><div class="row"><div class="col-sm-1"><button class="btn btn-default"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-sm-10"><h5 class="task">' + item.text;
+                var taskRow = '<li class="list-group-item task-item" data-toggle="modal" data-target="#editModal"><div class="row"><div class="col-sm-1"><button class="btn btn-default"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-sm-10"><h5 class="task">' + item.text;
                 if (item.date !== null) {
                     taskRow += ' <small>' + item.dateString() + '</small>';
                 }
