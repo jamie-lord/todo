@@ -1,4 +1,4 @@
-li:hover {
+li.task-item:hover {
     background-color: tomato;
     transition: 0.7s;
     cursor: pointer;
