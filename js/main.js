@@ -2,7 +2,6 @@ $(document).ready(function() {
 
     const STORAGE_KEY = 'tasks';
     var items = getFromLocal(STORAGE_KEY);
-    var index;
     loadLists(items);
     disableEditButtons(true);
     updatePageTitle();
@@ -47,7 +46,7 @@ $(document).ready(function() {
     // delete one item
     $('ul').delegate('button.delete-button', 'click', function(event) {
         event.stopPropagation();
-        index = $('button.delete-button').index(this);
+        var index = $('button.delete-button').index(this);
         $('li.task-item').eq(index).remove();
         items.splice(index, 1);
         storeToLocal(STORAGE_KEY, items);
@@ -56,9 +55,7 @@ $(document).ready(function() {
 
     // edit panel
     $('ul').delegate('li.task-item', 'click', function() {
-        index = $('li.task-item').index(this);
-        var content = items[index].toString();
-        $('#edit-input').val(content);
+        $('#edit-input').val(items[this.getAttribute('data-task-index')].toString());
     });
 
     $('#edit-button').click(function() {
@@ -123,7 +120,7 @@ $(document).ready(function() {
         if (tasks.length > 0) {
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
-                list += '<li class="list-group-item task-item" data-toggle="modal" data-target="#editModal"><div class="row"><div class="col-sm-1"><button class="btn btn-default"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-sm-10"><h5 class="task">' + task.text;
+                list += '<li class="list-group-item task-item" data-toggle="modal" data-target="#editModal" data-task-index="' + items.indexOf(task) + '"><div class="row"><div class="col-sm-1"><button class="btn btn-default"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-sm-10"><h5 class="task">' + task.text;
                 if (task.date !== null) {
                     list += ' <small>' + task.dateString() + '</small>';
                 }
@@ -157,8 +154,8 @@ $(document).ready(function() {
         if (localStorage[key]) {
             var objects = JSON.parse(localStorage[key]);
             var taskItems = [];
-            for (var index = 0; index < objects.length; index++) {
-                var item = objects[index];
+            for (var i = 0; i < objects.length; i++) {
+                var item = objects[i];
                 var task = new TodoTxtItem();
                 task.text = item.text;
                 task.priority = item.priority;
