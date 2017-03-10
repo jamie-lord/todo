@@ -95,7 +95,7 @@ $(document).ready(function() {
         if (tasks.length > 0) {
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
-                if (task.projects != null && task.projects.length > 0) {
+                if (task.projects !== null && task.projects.length > 0) {
                     for (var j = 0; j < task.projects.length; j++) {
                         var project = task.projects[j];
                         if (projects.indexOf(project) == -1) {
@@ -107,7 +107,7 @@ $(document).ready(function() {
         }
         return projects.sort(function(a, b) {
             return a.toLowerCase().localeCompare(b.toLowerCase());
-        });;
+        });
     }
 
     // Load a tab for a project
@@ -137,7 +137,7 @@ $(document).ready(function() {
         var tasks = [];
         for (var i = 0; i < allTasks.length; i++) {
             var task = allTasks[i];
-            if (task.projects != null && task.projects.length > 0) {
+            if (task.projects !== null && task.projects.length > 0) {
                 for (var j = 0; j < task.projects.length; j++) {
                     if (thisProject == task.projects[j]) {
                         tasks.push(task);
