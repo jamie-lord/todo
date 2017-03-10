@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     const STORAGE_KEY = 'tasks';
+    const DATA_TASK_INDEX = 'data-task-index';
     var items = getFromLocal(STORAGE_KEY);
     loadLists(items);
     disableEditButtons(true);
@@ -46,7 +47,7 @@ $(document).ready(function() {
     // Delete a task
     $(document).on('click', 'button.delete-button', function(event) {
         event.stopPropagation();
-        var index = $('button.delete-button').index(this);
+        var index = $(this).parents('li.task-item')[0].getAttribute(DATA_TASK_INDEX);
         $('li.task-item').eq(index).remove();
         items.splice(index, 1);
         storeToLocal(STORAGE_KEY, items);
@@ -55,23 +56,33 @@ $(document).ready(function() {
 
     // Open edit modal
     $(document).on('click', 'li.task-item', function() {
-        var index = this.getAttribute('data-task-index');
+        var index = this.getAttribute(DATA_TASK_INDEX);
         $('#edit-input').val(items[index].toString());
-        $('#edit-input')[0].setAttribute('data-task-index', index);
+        $('#edit-input')[0].setAttribute(DATA_TASK_INDEX, index);
     });
 
-    // Save changes
+    // Save changes to edited task
     $('#edit-button').click(function() {
         var item = new TodoTxtItem();
         item.parse($('#edit-input').val());
-        items[$('#edit-input')[0].getAttribute('data-task-index')] = item;
+        items[$('#edit-input')[0].getAttribute(DATA_TASK_INDEX)] = item;
         loadLists(items);
         storeToLocal(STORAGE_KEY, items);
     });
 
-    // when edit modal is closed keyup main input
+    // When edit modal is closed keyup main input
     $('#editModal').on('hidden.bs.modal', function() {
         $('#main-input').keyup();
+    });
+
+    // Mark task as complete
+    $(document).on('click', 'button.complete-button', function(event) {
+        event.stopPropagation();
+        var index = $(this).parents('li.task-item')[0].getAttribute(DATA_TASK_INDEX);
+        items[index].complete = true;
+        items[index].completed = new Date();
+        loadLists(items);
+        storeToLocal(STORAGE_KEY, items);
     });
 
     // Load lists for each unique project
@@ -118,12 +129,13 @@ $(document).ready(function() {
         $('#task-list-project-' + project).append(buildTaskList(tasks));
     }
 
+    // Build and return a HTML list for an array of tasks
     function buildTaskList(tasks) {
         var list = '';
         if (tasks.length > 0) {
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
-                list += '<li class="list-group-item task-item" data-toggle="modal" data-target="#editModal" data-task-index="' + items.indexOf(task) + '"><div class="row"><div class="col-sm-1"><button class="btn btn-default"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-sm-10"><h5 class="task">' + task.text;
+                list += '<li class="list-group-item task-item" data-toggle="modal" data-target="#editModal" ' + DATA_TASK_INDEX + '="' + items.indexOf(task) + '"><div class="row"><div class="col-sm-1"><button class="btn btn-default complete-button"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-sm-10"><h5 class="task">' + task.text;
                 if (task.date !== null) {
                     list += ' <small>' + task.dateString() + '</small>';
                 }
@@ -173,7 +185,7 @@ $(document).ready(function() {
             return [];
     }
 
-    // save entire list
+    // Save all tasks to text file
     $('#export-button').click(function() {
         var output = [];
         items.forEach(function(item) {
