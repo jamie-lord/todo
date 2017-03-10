@@ -15,7 +15,7 @@ $(document).ready(function() {
         document.title = items.length + ' Todo';
     }
 
-    // if input is empty disable button
+    // If input is empty disable button
     $('#main-input, #edit-input').keyup(function() {
         if ($(this).val().length !== 0) {
             disableEditButtons(false);
@@ -24,7 +24,7 @@ $(document).ready(function() {
         }
     });
 
-    // bind input enter with button submit
+    // Bind input enter with button submit
     $('#main-input').keypress(function(e) {
         if (e.which === 13) {
             if ($('#main-input').val().length !== 0)
@@ -33,7 +33,7 @@ $(document).ready(function() {
     });
 
     // Create a new task
-    $('#main-button').click(function() {
+    $(document).on('click', '#main-button', function() {
         var newTask = new TodoTxtItem($('#main-input').val());
         newTask.date = new Date();
         items.push(newTask);
@@ -43,8 +43,8 @@ $(document).ready(function() {
         disableEditButtons();
     });
 
-    // delete one item
-    $('ul').delegate('button.delete-button', 'click', function(event) {
+    // Delete a task
+    $(document).on('click', 'button.delete-button', function(event) {
         event.stopPropagation();
         var index = $('button.delete-button').index(this);
         $('li.task-item').eq(index).remove();
@@ -53,15 +53,18 @@ $(document).ready(function() {
         loadLists(items);
     });
 
-    // edit panel
-    $('ul').delegate('li.task-item', 'click', function() {
-        $('#edit-input').val(items[this.getAttribute('data-task-index')].toString());
+    // Open edit modal
+    $(document).on('click', 'li.task-item', function() {
+        var index = this.getAttribute('data-task-index');
+        $('#edit-input').val(items[index].toString());
+        $('#edit-input')[0].setAttribute('data-task-index', index);
     });
 
+    // Save changes
     $('#edit-button').click(function() {
         var item = new TodoTxtItem();
         item.parse($('#edit-input').val());
-        items[index] = item;
+        items[$('#edit-input')[0].getAttribute('data-task-index')] = item;
         loadLists(items);
         storeToLocal(STORAGE_KEY, items);
     });
