@@ -157,11 +157,11 @@ $(document).ready(function() {
         if (tasks.length > 0) {
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
-                list += '<li class="list-group-item task-item" data-toggle="modal" data-target="#editModal" ' + DATA_TASK_INDEX + '="' + items.indexOf(task) + '"><div class="row"><div class="col-sm-1"><button class="btn btn-default complete-button"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-sm-10"><h5 class="task">' + task.text;
+                list += '<li class="list-group-item task-item" data-toggle="modal" data-target="#editModal" ' + DATA_TASK_INDEX + '="' + items.indexOf(task) + '"><div class="row"><div class="col-xs-1"><button class="btn btn-link complete-button"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-xs-10"><h5 class="task">' + task.text;
                 if (task.date !== null) {
                     list += ' <small>' + task.dateString() + '</small>';
                 }
-                list += '</h5></div><div class="col-sm-1"><button class="btn btn-danger delete-button"><span class="glyphicon glyphicon-remove"></span></button></div></div></li>';
+                list += '</h5></div><div class="col-xs-1"><button class="btn btn-link delete-button"><span class="glyphicon glyphicon-remove"></span></button></div></div></li>';
             }
         }
         return list;

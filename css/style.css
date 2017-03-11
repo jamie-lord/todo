@@ -1,5 +1,5 @@
 li.task-item:hover {
-    background-color: tomato;
+    background-color: #eee;
     transition: 0.7s;
     cursor: pointer;
 }
@@ -7,4 +7,9 @@ li.task-item:hover {
 h5.task {
     margin-top: 0px;
     margin-bottom: 0px;
+}
+
+button.btn.btn-link.complete-button,
+button.btn.btn-link.delete-button {
+    color: #333;
 }
