@@ -88,16 +88,38 @@ $(document).ready(function() {
     // Load lists for each unique project
     function loadLists(tasks) {
         $('#project-nav li').remove();
-        $('#project-nav').append('<li class="active"><a href="#all-projects-tab" data-toggle="tab">All</a></li>');
         $('#project-tabs div').remove();
-
+        if (tasks.length < 1) {
+            return;
+        }
+        $('#project-nav').append('<li class="active"><a href="#all-projects-tab" data-toggle="tab">All</a></li>');
         $('#project-tabs').append('<div class="tab-pane active" id="all-projects-tab"></div>');
         $('#all-projects-tab').append('<ul class="list-group" id="task-list-project-all"></ul>');
-        $('#task-list-project-all').append(buildTaskList(tasks));
-        var projects = getUniqueProjects(tasks);
+        var incompleteTasks = getIncompleteTasks(tasks);
+        $('#task-list-project-all').append(buildTaskList(incompleteTasks));
+        var projects = getUniqueProjects(incompleteTasks);
         for (var i = 0; i < projects.length; i++) {
-            initialiseTab(projects[i], getTasksForProject(projects[i], tasks));
+            initialiseTab(projects[i], getTasksForProject(projects[i], incompleteTasks));
         }
+        initialiseCompletedTab();
+    }
+
+    // Setup complete task tab
+    function initialiseCompletedTab() {
+        var complete = [];
+        for (var i = 0; i < items.length; i++) {
+            var task = items[i];
+            if (task.complete) {
+                complete.push(task);
+            }
+        }
+        if (complete.length < 1) {
+            return;
+        }
+        $('#project-nav').append('<li><a href="#complete-tasks-tab" data-toggle="tab">Complete</a></li>');
+        $('#project-tabs').append('<div class="tab-pane" id="complete-tasks-tab"></div>');
+        $('#complete-tasks-tab').append('<ul class="list-group" id="task-list-complete"></ul>');
+        $('#task-list-complete').append(buildTaskList(complete));
     }
 
     // Get all unique projects for all tasks
@@ -160,6 +182,18 @@ $(document).ready(function() {
         return tasks;
     }
 
+    // Get only incomplete tasks
+    function getIncompleteTasks() {
+        var tasks = [];
+        for (var i = 0; i < items.length; i++) {
+            var task = items[i];
+            if (!task.complete) {
+                tasks.push(task);
+            }
+        }
+        return tasks;
+    }
+
     function storeToLocal(key, items) {
         localStorage[key] = JSON.stringify(items);
         updatePageTitle();
@@ -175,6 +209,7 @@ $(document).ready(function() {
                 task.text = item.text;
                 task.priority = item.priority;
                 task.complete = item.complete;
+                task.completed = new Date(item.completed);
                 task.date = new Date(item.date);
                 task.contexts = item.contexts;
                 task.projects = item.projects;
