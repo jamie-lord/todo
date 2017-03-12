@@ -5,11 +5,23 @@ li.task-item:hover {
 }
 
 h5.task {
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 button.btn.btn-link.complete-button,
 button.btn.btn-link.delete-button {
     color: #333;
+}
+
+.top-navbar {
+    margin-top: 20px;
+}
+
+#project-nav {
+    padding-top: 0;
+}
+
+#project-nav li:last-child {
+    margin-bottom: 0;
 }
