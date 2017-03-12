@@ -155,13 +155,13 @@ $(document).ready(function() {
     function buildTaskList(tasks) {
         var list = '';
         if (tasks.length > 0) {
+            const taskTemplate = getHtmlTemplate('template-task-item');
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
-                list += '<li class="list-group-item task-item" data-toggle="modal" data-target="#editModal" ' + DATA_TASK_INDEX + '="' + items.indexOf(task) + '"><div class="row"><div class="col-xs-1"><button class="btn btn-link complete-button"><span class="glyphicon glyphicon-ok"></span></button></div><div class="col-xs-10"><h5 class="task">' + task.text;
-                if (task.date !== null) {
-                    list += ' <small>' + task.dateString() + '</small>';
-                }
-                list += '</h5></div><div class="col-xs-1"><button class="btn btn-link delete-button"><span class="glyphicon glyphicon-remove"></span></button></div></div></li>';
+                list += taskTemplate.replace(/{{data-task-index}}/g, DATA_TASK_INDEX)
+                    .replace(/{{index}}/g, items.indexOf(task))
+                    .replace(/{{task-text}}/g, task.text)
+                    .replace(/{{task-date}}/g, task.dateString());
             }
         }
         return list;
@@ -192,6 +192,12 @@ $(document).ready(function() {
             }
         }
         return tasks;
+    }
+
+    // Get a HTML template
+    function getHtmlTemplate(name) {
+        var template = document.getElementById(name);
+        return template.innerHTML;
     }
 
     function storeToLocal(key, items) {
