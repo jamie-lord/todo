@@ -4,6 +4,11 @@ li.task-item:hover {
     cursor: pointer;
 }
 
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
+
 h5.task {
     margin-top: 0;
     margin-bottom: 0;

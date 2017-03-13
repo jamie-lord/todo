@@ -45,7 +45,7 @@ $(document).ready(function() {
     });
 
     // Delete a task
-    $(document).on('click', 'button.delete-button', function(event) {
+    $(document).on('click', '.delete-button', function(event) {
         event.stopPropagation();
         var index = $(this).parents('li.task-item')[0].getAttribute(DATA_TASK_INDEX);
         $('li.task-item').eq(index).remove();
@@ -76,7 +76,7 @@ $(document).ready(function() {
     });
 
     // Mark task as complete
-    $(document).on('click', 'button.complete-button', function(event) {
+    $(document).on('click', '.complete-button', function(event) {
         event.stopPropagation();
         var index = $(this).parents('li.task-item')[0].getAttribute(DATA_TASK_INDEX);
         items[index].complete = true;
@@ -163,10 +163,17 @@ $(document).ready(function() {
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
                 let taskDate = (task.date) ? task.dateString() : '';
+                let contexts = '';
+                if (task.contexts) {
+                    for (var c = 0; c < task.contexts.length; c++) {
+                        contexts += '<span class="label label-default">' + task.contexts[c] + '</span>\n';
+                    }
+                }
                 list += taskTemplate.replace(/{{data-task-index}}/g, DATA_TASK_INDEX)
                     .replace(/{{index}}/g, items.indexOf(task))
                     .replace(/{{task-text}}/g, task.text)
-                    .replace(/{{task-date}}/g, taskDate);
+                    .replace(/{{task-date}}/g, taskDate)
+                    .replace(/{{context-labels}}/g, contexts);
             }
         }
         return list;

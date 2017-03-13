@@ -62,12 +62,19 @@
     </div>
     <script id="template-task-item" type="text/template">
         <li class="list-group-item task-item" data-toggle="modal" data-target="#editModal" {{data-task-index}}="{{index}}">
-            <div class="row">
-                <div class="col-xs-1"><button class="btn btn-link complete-button"><span class="glyphicon glyphicon-ok"></span></button></div>
-                <div class="col-xs-10">
-                    <h5 class="task">{{task-text}} <small>{{task-date}}</small></h5>
+            <div class="row vertical-align">
+                <div class="col-xs-1 text-center">
+                    <span class="glyphicon glyphicon-ok complete-button"></span>
                 </div>
-                <div class="col-xs-1"><button class="btn btn-link delete-button"><span class="glyphicon glyphicon-remove"></span></button></div>
+                <div class="col-xs-10">
+                    <div>
+                        <h5 class="task">{{task-text}} <small>{{task-date}}</small></h5>
+                    </div>
+                    <div>{{context-labels}}</div>
+                </div>
+                <div class="col-xs-1 text-center">
+                    <span class="glyphicon glyphicon-remove delete-button"></span>
+                </div>
             </div>
         </li>
     </script>
