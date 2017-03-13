@@ -92,14 +92,17 @@ $(document).ready(function() {
         if (tasks.length < 1) {
             return;
         }
-        buildProjectNav('all-projects-tab', 'All', true);
-        buildProjectTab('all-projects-tab', true);
-        buildTaskList('task-list-project-all', 'all-projects-tab');
-        var incompleteTasks = getIncompleteTasks(tasks);
-        $('#task-list-project-all').append(buildTasks(incompleteTasks));
-        var projects = getUniqueProjects(incompleteTasks);
-        for (var i = 0; i < projects.length; i++) {
-            initialiseTab(projects[i], getTasksForProject(projects[i], incompleteTasks));
+        // If there are any tasks that are not complete
+        if (tasks.filter(function(t) { return !t.complete; }).length > 0) {
+            buildProjectNav('all-projects-tab', 'All', true);
+            buildProjectTab('all-projects-tab', true);
+            buildTaskList('task-list-project-all', 'all-projects-tab');
+            var incompleteTasks = getIncompleteTasks(tasks);
+            $('#task-list-project-all').append(buildTasks(incompleteTasks));
+            var projects = getUniqueProjects(incompleteTasks);
+            for (var i = 0; i < projects.length; i++) {
+                initialiseTab(projects[i], getTasksForProject(projects[i], incompleteTasks));
+            }
         }
         initialiseCompletedTab();
     }
