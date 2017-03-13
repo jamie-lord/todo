@@ -71,6 +71,15 @@
             </div>
         </li>
     </script>
+    <script id="template-project-nav" type="text/template">
+        <li class="{{is-active}}"><a href="#{{project-tab-id}}" data-toggle="tab">{{project-title}}</a></li>
+    </script>
+    <script id="template-project-tab" type="text/template">
+        <div class="tab-pane {{is-active}}" id="{{project-tab-id}}"></div>
+    </script>
+    <script id="template-task-list" type="text/template">
+        <ul class="list-group" id="{{task-list-id}}"></ul>
+    </script>
     <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap-3.3.7.min.js"></script>
     <script type="text/javascript" src="js/filesaver-1.3.2.min.js"></script>

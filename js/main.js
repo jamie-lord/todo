@@ -92,11 +92,11 @@ $(document).ready(function() {
         if (tasks.length < 1) {
             return;
         }
-        $('#project-nav').append('<li class="active"><a href="#all-projects-tab" data-toggle="tab">All</a></li>');
-        $('#project-tabs').append('<div class="tab-pane active" id="all-projects-tab"></div>');
-        $('#all-projects-tab').append('<ul class="list-group" id="task-list-project-all"></ul>');
+        buildProjectNav('all-projects-tab', 'All', true);
+        buildProjectTab('all-projects-tab', true);
+        buildTaskList('task-list-project-all', 'all-projects-tab');
         var incompleteTasks = getIncompleteTasks(tasks);
-        $('#task-list-project-all').append(buildTaskList(incompleteTasks));
+        $('#task-list-project-all').append(buildTasks(incompleteTasks));
         var projects = getUniqueProjects(incompleteTasks);
         for (var i = 0; i < projects.length; i++) {
             initialiseTab(projects[i], getTasksForProject(projects[i], incompleteTasks));
@@ -116,10 +116,10 @@ $(document).ready(function() {
         if (complete.length < 1) {
             return;
         }
-        $('#project-nav').append('<li><a href="#complete-tasks-tab" data-toggle="tab">Complete</a></li>');
-        $('#project-tabs').append('<div class="tab-pane" id="complete-tasks-tab"></div>');
-        $('#complete-tasks-tab').append('<ul class="list-group" id="task-list-complete"></ul>');
-        $('#task-list-complete').append(buildTaskList(complete));
+        buildProjectNav('complete-tasks-tab', 'Complete', false);
+        buildProjectTab('complete-tasks-tab', false);
+        buildTaskList('task-list-complete', 'complete-tasks-tab');
+        $('#task-list-complete').append(buildTasks(complete));
     }
 
     // Get all unique projects for all tasks
@@ -145,14 +145,15 @@ $(document).ready(function() {
 
     // Load a tab for a project
     function initialiseTab(project, tasks) {
-        $('#project-nav').append('<li><a href="#project-' + project + '-tab" data-toggle="tab">' + project + '</a></li>');
-        $('#project-tabs').append('<div class="tab-pane" id="project-' + project + '-tab"></div>');
-        $('#project-' + project + '-tab').append('<ul class="list-group" id="task-list-project-' + project + '"></ul>');
-        $('#task-list-project-' + project).append(buildTaskList(tasks));
+        let tabName = 'project-' + project + '-tab';
+        buildProjectNav(tabName, project, false);
+        buildProjectTab(tabName, false);
+        buildTaskList('task-list-project-' + project, tabName);
+        $('#task-list-project-' + project).append(buildTasks(tasks));
     }
 
     // Build and return a HTML list for an array of tasks
-    function buildTaskList(tasks) {
+    function buildTasks(tasks) {
         var list = '';
         if (tasks.length > 0) {
             const taskTemplate = getHtmlTemplate('template-task-item');
@@ -165,6 +166,32 @@ $(document).ready(function() {
             }
         }
         return list;
+    }
+
+    function buildProjectNav(projectTabId, projectTitle, isActive) {
+        let li = '';
+        let active = (isActive) ? 'active' : '';
+        const navTemplate = getHtmlTemplate('template-project-nav');
+        li += navTemplate.replace(/{{is-active}}/g, active)
+            .replace(/{{project-tab-id}}/g, projectTabId)
+            .replace(/{{project-title}}/g, projectTitle);
+        $('#project-nav').append(li);
+    }
+
+    function buildProjectTab(projectTabId, isActive) {
+        let div = '';
+        let active = (isActive) ? 'active' : '';
+        const tabTemplate = getHtmlTemplate('template-project-tab');
+        div += tabTemplate.replace(/{{project-tab-id}}/g, projectTabId)
+            .replace(/{{is-active}}/g, active);
+        $('#project-tabs').append(div);
+    }
+
+    function buildTaskList(taskListId, projectTabId) {
+        let ul = '';
+        const listTemplate = getHtmlTemplate('template-task-list');
+        ul += listTemplate.replace(/{{task-list-id}}/g, taskListId);
+        $('#' + projectTabId).append(ul);
     }
 
     function getTasksForProject(thisProject, allTasks) {
