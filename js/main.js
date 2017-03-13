@@ -159,10 +159,11 @@ $(document).ready(function() {
             const taskTemplate = getHtmlTemplate('template-task-item');
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
+                let taskDate = (task.date) ? task.dateString() : '';
                 list += taskTemplate.replace(/{{data-task-index}}/g, DATA_TASK_INDEX)
                     .replace(/{{index}}/g, items.indexOf(task))
                     .replace(/{{task-text}}/g, task.text)
-                    .replace(/{{task-date}}/g, task.dateString());
+                    .replace(/{{task-date}}/g, taskDate);
             }
         }
         return list;
@@ -242,8 +243,8 @@ $(document).ready(function() {
                 task.text = item.text;
                 task.priority = item.priority;
                 task.complete = item.complete;
-                task.completed = new Date(item.completed);
-                task.date = new Date(item.date);
+                task.completed = (item.completed) ? new Date(item.completed) : null;
+                task.date = (item.date) ? new Date(item.date) : null;
                 task.contexts = item.contexts;
                 task.projects = item.projects;
                 taskItems.push(task);
@@ -259,7 +260,7 @@ $(document).ready(function() {
         items.forEach(function(item) {
             output.push(item.toString() + '\n');
         }, this);
-        var file = new File(output, "todo.txt", {
+        var file = new File(output, 'todo-' + new Date().toISOString() + '.txt', {
             type: "text/plain;charset=utf-8"
         });
         saveAs(file);
