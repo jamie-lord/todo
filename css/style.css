@@ -25,3 +25,7 @@ button.btn.btn-link.delete-button {
 #project-nav li:last-child {
     margin-bottom: 0;
 }
+
+.top-navbar .navbar-btn {
+    margin-right: 8px;
+}

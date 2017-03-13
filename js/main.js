@@ -264,4 +264,35 @@ $(document).ready(function() {
         });
         saveAs(file);
     });
+
+    document.getElementById('import-button').addEventListener('change', importEventHandler);
+
+    addEventListener('dragover', function(e) { e.preventDefault(); });
+    addEventListener('drop', function(e) {
+        importEventHandler.call((e.dataTransfer || e.clipboardData));
+        e.preventDefault();
+    });
+
+    function importEventHandler() {
+        let file = this.children[0].files[0];
+        let reader = new FileReader();
+        reader.onloadend = function callback(e) {
+            let input = e.target.result.split('\n');
+            let tasks = [];
+            for (var i = 0; i < input.length; i++) {
+                var t = input[i];
+                if (t === '') continue;
+                tasks.push(new TodoTxtItem(t));
+            }
+            items = tasks;
+            loadLists(items);
+            storeToLocal(STORAGE_KEY, items);
+        };
+        reader.readAsText(file);
+        if (this.id) { //only run if this is the input
+            let id = this.id;
+            this.outerHTML = this.outerHTML; //this resets the input
+            document.getElementById(id).addEventListener('change', importEventHandler);
+        }
+    }
 });
