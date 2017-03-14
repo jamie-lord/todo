@@ -163,17 +163,23 @@ $(document).ready(function() {
             for (var i = 0; i < tasks.length; i++) {
                 var task = tasks[i];
                 let taskDate = (task.date) ? task.dateString() : '';
-                let contexts = '';
+                let meta = '';
+                if (task.priority) {
+                    meta += '<span class="label label-primary">' + task.priority + '</span>\n';
+                }
                 if (task.contexts) {
                     for (var c = 0; c < task.contexts.length; c++) {
-                        contexts += '<span class="label label-default">' + task.contexts[c] + '</span>\n';
+                        meta += '<span class="label label-default">' + task.contexts[c] + '</span>\n';
                     }
+                }
+                if (task.completed) {
+                    meta += '<small>' + task.completedString() + '</small>';
                 }
                 list += taskTemplate.replace(/{{data-task-index}}/g, DATA_TASK_INDEX)
                     .replace(/{{index}}/g, items.indexOf(task))
                     .replace(/{{task-text}}/g, task.text)
                     .replace(/{{task-date}}/g, taskDate)
-                    .replace(/{{context-labels}}/g, contexts);
+                    .replace(/{{task-meta}}/g, meta);
             }
         }
         return list;
