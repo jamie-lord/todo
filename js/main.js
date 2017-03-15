@@ -146,6 +146,27 @@ $(document).ready(function() {
         });
     }
 
+    // Get all unique contexts for all tasks
+    function getUniqueContexts(tasks) {
+        var contexts = [];
+        if (tasks.length > 0) {
+            for (var i = 0; i < tasks.length; i++) {
+                var task = tasks[i];
+                if (task.contexts !== null && task.contexts.length > 0) {
+                    for (var j = 0; j < task.contexts.length; j++) {
+                        var context = task.contexts[j];
+                        if (contexts.indexOf(context) == -1) {
+                            contexts.push(context);
+                        }
+                    }
+                }
+            }
+        }
+        return contexts.sort(function(a, b) {
+            return a.toLowerCase().localeCompare(b.toLowerCase());
+        });
+    }
+
     // Load a tab for a project
     function initialiseTab(project, tasks) {
         let tabName = 'project-' + project + '-tab';
@@ -243,6 +264,43 @@ $(document).ready(function() {
         var template = document.getElementById(name);
         return template.innerHTML;
     }
+
+    // Autocomplete for eisting projects and contexts
+    $('#main-input').textcomplete([{ // Projects
+            id: 'task-projects',
+            words: getUniqueProjects(items),
+            match: /[\+](\w{1,})$/,
+            search: function(term, callback) {
+                callback($.map(this.words, function(word) {
+                    return word.toLowerCase().indexOf(term.toLowerCase()) === 0 ? word : null;
+                }));
+            },
+            index: 1,
+            replace: function(word) {
+                return '+' + word + ' ';
+            }
+        },
+        { // Contexts
+            id: 'task-contexts',
+            words: getUniqueContexts(items),
+            match: /[\@](\w{1,})$/,
+            search: function(term, callback) {
+                callback($.map(this.words, function(word) {
+                    return word.toLowerCase().indexOf(term.toLowerCase()) === 0 ? word : null;
+                }));
+            },
+            index: 1,
+            replace: function(word) {
+                return '@' + word + ' ';
+            }
+        }
+    ], {
+        onKeydown: function(e, commands) {
+            if (e.ctrlKey && e.keyCode === 74) { // CTRL-J
+                return commands.KEY_ENTER;
+            }
+        }
+    });
 
     function storeToLocal(key, items) {
         localStorage[key] = JSON.stringify(items);

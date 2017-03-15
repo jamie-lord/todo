@@ -40,3 +40,13 @@ button.btn.btn-link.delete-button {
 .top-navbar .navbar-btn {
     margin-right: 8px;
 }
+
+.complete-button:hover {
+    color: #5cb85c;
+    transition: 0.2s;
+}
+
+.delete-button:hover {
+    color: #c9302c;
+    transition: 0.2s;
+}
