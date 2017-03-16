@@ -249,9 +249,14 @@ $(document).ready(function() {
 
     // Get only incomplete tasks
     function getIncompleteTasks() {
-        return items.filter(function(task) {
-            return !task.complete;
-        });
+        var tasks = [];
+        for (var i = 0; i < items.length; i++) {
+            var task = items[i];
+            if (!task.complete) {
+                tasks.push(task);
+            }
+        }
+        return tasks;
     }
 
     // Get a HTML template
