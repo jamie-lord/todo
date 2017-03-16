@@ -233,18 +233,30 @@ $(document).ready(function() {
     }
 
     function getTasksForProject(thisProject, allTasks) {
-        return allTasks.filter(function(task) {
-            return task.projects.filter(function(project) {
-                return project == thisProject;
-            });
-        });
+        var tasks = [];
+        for (var i = 0; i < allTasks.length; i++) {
+            var task = allTasks[i];
+            if (task.projects !== null && task.projects.length > 0) {
+                for (var j = 0; j < task.projects.length; j++) {
+                    if (thisProject == task.projects[j]) {
+                        tasks.push(task);
+                    }
+                }
+            }
+        }
+        return tasks;
     }
 
     // Get only incomplete tasks
     function getIncompleteTasks() {
-        return items.filter(function(task) {
-            return !task.complete;
-        });
+        var tasks = [];
+        for (var i = 0; i < items.length; i++) {
+            var task = items[i];
+            if (!task.complete) {
+                tasks.push(task);
+            }
+        }
+        return tasks;
     }
 
     // Get a HTML template
