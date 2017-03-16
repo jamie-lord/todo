@@ -13,7 +13,7 @@ $(document).ready(function() {
     }
 
     function updatePageTitle() {
-        document.title = items.length + ' Todo';
+        document.title = getIncompleteTasks().length + ' todo';
     }
 
     // If input is empty disable button
