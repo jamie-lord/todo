@@ -50,3 +50,7 @@ button.btn.btn-link.delete-button {
     color: #c9302c;
     transition: 0.2s;
 }
+
+#main-container {
+    margin-bottom: 20px;
+}
